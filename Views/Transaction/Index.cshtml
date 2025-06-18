@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ELibrary.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Transactions";
+    int sno = 1;
+}
+
+<h2>Transactions</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Add New Transaction</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Member</th>
+            <th>Book</th>
+            <th>Date Borrowed</th>
+            <th>Date Returned</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@sno</td>
+                <td>@item.Member.FullName</td>
+                <td>@item.Book.Title</td>
+                <td>@item.IssuedDate.ToShortDateString()</td>
+                <td>@item.ReturnDate?.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            sno++;
+        }
+    </tbody>
+</table>

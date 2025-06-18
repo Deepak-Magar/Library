@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Welcome to ELibrary";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome to ELibrary</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+        }
+
+        .hero-section {
+            background-color: #4a90e2;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="display-4 fw-bold">ELibrary System</h1>
+            <p class="lead">Manage your library efficiently and easily</p>
+        </div>
+    </header>
+
+    <main class="container mt-5">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="card py-4">
+                    <div class="card-body">
+                        <div class="text-primary card-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Manage Books</h5>
+                        <p class="card-text">Add, edit, delete or view all books in the library.</p>
+                        <a href="/Book" class="btn btn-primary">Go to Books</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card py-4">
+                    <div class="card-body">
+                        <div class="text-success card-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Manage Members</h5>
+                        <p class="card-text">View, add, or manage registered library members.</p>
+                        <a href="/Member" class="btn btn-success">Go to Members</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card py-4">
+                    <div class="card-body">
+                        <div class="text-warning card-icon">
+                            <i class="bi bi-arrow-left-right"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Issue & Return</h5>
+                        <p class="card-text">Handle book issuance and returns seamlessly.</p>
+                        <a href="/Transaction" class="btn btn-warning text-white">Go to Transactions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-3 mt-5">
+        <p class="mb-0">&copy; 2025 ELibrary System</p>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</body>
+</html>
+

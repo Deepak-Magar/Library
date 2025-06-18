@@ -1,0 +1,113 @@
+﻿@model IEnumerable<ELibrary.Models.Book>
+
+@{
+    ViewData["Title"] = "Books";
+    int sno = 1;
+}
+
+<h2 class="mt-4">Books</h2>
+
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="input-group">
+        <input type="text" id="searchBox" class="form-control" placeholder="Search books..." autocomplete="off" />
+    </div>
+</form>
+
+<a class="btn btn-success mb-3" asp-action="Create">Add New Book</a>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>S.No</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Available</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="bookTableBody">
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@(sno++)</td>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Year</td>
+                <td>
+                    @if (book.IsAvailable)
+                    {
+                        <span style="color: green;">&#10004;</span>
+                    }
+                    else
+                    {
+                        <span style="color: red;">&#10060;</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Pagination -->
+<nav>
+    <ul class="pagination">
+        @if (ViewBag.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage - 1)"
+                   asp-route-searchString="@ViewBag.SearchString">
+                    Previous
+                </a>
+            </li>
+        }
+
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@i"
+                   asp-route-searchString="@ViewBag.SearchString">
+                    @i
+                </a>
+            </li>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(ViewBag.CurrentPage + 1)"
+                   asp-route-searchString="@ViewBag.SearchString">
+                    Next
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+
+
+@section Scripts {
+    <script>
+        const searchBox = document.getElementById('searchBox');
+        const bookTableBody = document.getElementById('bookTableBody');
+
+        searchBox.addEventListener('keyup', function () {
+            const term = searchBox.value;
+
+            fetch(`/Book/Search?term=${encodeURIComponent(term)}`)
+                .then(response => response.text())
+                .then(html => {
+                    bookTableBody.innerHTML = html;
+                });
+        });
+    </script>
+}

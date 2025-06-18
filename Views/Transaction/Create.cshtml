@@ -1,0 +1,37 @@
+﻿@model ELibrary.Models.Transaction
+
+<h2>Add New Transaction</h2>
+<form asp-action="Create">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label asp-for="BookId" class="control-label"></label>
+        <select asp-for="BookId" class="form-control" asp-items="ViewBag.BookList">
+            <option value="">-- Select Book --</option>
+        </select>
+        <span asp-validation-for="BookId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MemberId" class="control-label"></label>
+        <select asp-for="MemberId" class="form-control" asp-items="ViewBag.MemberList">
+            <option value="">-- Select Member --</option>
+        </select>
+        <span asp-validation-for="MemberId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IssuedDate" class="control-label"></label>
+        <input asp-for="IssuedDate" class="form-control" type="date" />
+        <span asp-validation-for="IssuedDate" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

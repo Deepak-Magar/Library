@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ELibrary.Models.Book>
+
+@{
+    int sno = 1;
+}
+
+@foreach (var book in Model)
+{
+    <tr>
+        <td>@sno</td>
+        <td>@book.Title</td>
+        <td>@book.Author</td>
+        <td>@book.Year</td>
+        <td>
+            @if (book.IsAvailable)
+            {
+                <span style="color: green;">&#10004;</span>
+            }
+            else
+            {
+                <span style="color: red;">&#10060;</span>
+            }
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-primary">Edit</a>
+            <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-sm btn-info">Details</a>
+            <a asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger">Delete</a>
+        </td>
+    </tr>
+    sno++;
+}

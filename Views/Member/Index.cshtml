@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ELibrary.Models.Member>
+@{
+    ViewData["Title"] = "Members";
+    int sno = 1;
+}
+
+<h2 class="mt-4">Members</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Add New Member</a>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>S.No</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Join Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var member in Model)
+        {
+            <tr>
+                <td>@sno</td>
+                <td>@member.FullName</td>
+                <td>@member.Email</td>
+                <td>@member.Phone</td>
+                <td>@member.JoinDate.ToShortDateString()</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@member.Id" class="btn btn-sm btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@member.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@member.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            sno++;
+
+        }
+    </tbody>
+</table>
+

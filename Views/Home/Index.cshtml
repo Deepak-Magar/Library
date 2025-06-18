@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Welcome to eLibrary";
+}
+
+<div class="container-fluid p-0">
+    <div class="hero-section position-relative text-white text-center" style="background-image: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f'); background-size: cover; background-position: center; height: 50vh;">
+        <div class="overlay position-absolute w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6);"></div>
+        <div class="position-relative z-2 d-flex flex-column justify-content-center align-items-center h-100">
+            <h1 class="display-3 fw-bold">Welcome to eLibrary</h1>
+            <p class="lead fs-4">Explore Knowledge, Anytime, Anywhere.</p>
+            <a href="/Home/Privacy" class="btn btn-lg btn-primary mt-3">Get Started</a>
+        </div>
+    </div>
+</div>
+
+<div class="container text-center my-5">
+    <h2 class="mb-4 fw-semibold">Why Choose US?</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/3106/3106773.png" class="img-fluid mb-3" style="max-height: 120px;" alt="Books Icon" />
+            <h5>Vast Collection of Books</h5>
+            <p>Thousands of books across genres to keep your curiosity alive.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="img-fluid mb-3" style="max-height: 120px;" alt="User Icon" />
+            <h5>Easy Member Access</h5>
+            <p>Be a member and access books seamlessly.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/2436/2436630.png" class="img-fluid mb-3" style="max-height: 120px;" alt="Online Reading Icon" />
+            <h5>Digital and Physical Options</h5>
+            <p>Get your desired books from us.</p>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-light text-center text-muted py-4">
+    <p class="mb-0">&copy; @DateTime.Now.Year - ELibrary. All rights reserved.</p>
+</footer>
