@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 [Authorize]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-
 public class TransactionController : Controller
 {
     private readonly AppDbContext _context;
