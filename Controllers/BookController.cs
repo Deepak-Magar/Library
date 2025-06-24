@@ -1,7 +1,7 @@
 ﻿using ELibrary.Models;
+using ELibrary.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ELibrary.Controllers
 {
@@ -9,43 +9,20 @@ namespace ELibrary.Controllers
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public class BookController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IBookService _bookService;
 
-        public BookController(AppDbContext context)
+        public BookController(IBookService bookService)
         {
-            _context = context;
+            _bookService = bookService;
         }
 
         public async Task<IActionResult> Index(string searchString, int page = 1)
         {
             int pageSize = 10;
 
-            var query = _context.Books
-                .Where(b => !b.isDeleted);
-
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                query = query.Where(b => b.Title.Contains(searchString));
-            }
-
-            var totalBooks = await query.CountAsync();
+            var books = await _bookService.GetBooksAsync(searchString, page, pageSize);
+            var totalBooks = await _bookService.GetTotalBookCountAsync(searchString);
             var totalPages = (int)Math.Ceiling(totalBooks / (double)pageSize);
-
-            var books = await query
-                .OrderBy(b => b.Title)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var borrowedBookIds = await _context.Transactions
-                .Where(t => t.ReturnDate == null)
-                .Select(t => t.BookId)
-                .ToListAsync();
-
-            foreach (var book in books)
-            {
-                book.IsAvailable = !borrowedBookIds.Contains(book.Id);
-            }
 
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
@@ -54,50 +31,17 @@ namespace ELibrary.Controllers
             return View(books);
         }
 
-
-        //public async Task<IActionResult> Index(string searchString)
-        //{
-        //    var books = await GetFilteredBooks(searchString);
-        //    return View(books);
-        //}
-
         public async Task<IActionResult> Search(string term)
         {
-            var books = await GetFilteredBooks(term);
+            var books = await _bookService.GetFilteredBooksAsync(term);
             return PartialView("_BookTablePartial", books);
         }
-
-        private async Task<List<Book>> GetFilteredBooks(string? searchString)
-        {
-            var query = _context.Books
-                .Where(b => b.isDeleted == false);
-
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                query = query.Where(b => b.Title.Contains(searchString));
-            }
-
-            var books = await query.ToListAsync();
-
-            var borrowedBookIds = await _context.Transactions
-                .Where(t => t.ReturnDate == null)
-                .Select(t => t.BookId)
-                .ToListAsync();
-
-            foreach (var book in books)
-            {
-                book.IsAvailable = !borrowedBookIds.Contains(book.Id);
-            }
-
-            return books;
-        }
-
 
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
-            var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _bookService.GetBookByIdAsync(id.Value);
             if (book == null) return NotFound();
 
             return View(book);
@@ -114,8 +58,7 @@ namespace ELibrary.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(book);
-                await _context.SaveChangesAsync();
+                await _bookService.CreateBookAsync(book);
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
@@ -125,7 +68,7 @@ namespace ELibrary.Controllers
         {
             if (id == null) return NotFound();
 
-            var book = await _context.Books.FindAsync(id);
+            var book = await _bookService.GetBookByIdAsync(id.Value);
             if (book == null) return NotFound();
 
             return View(book);
@@ -141,13 +84,13 @@ namespace ELibrary.Controllers
             {
                 try
                 {
-                    _context.Update(book);
-                    await _context.SaveChangesAsync();
+                    await _bookService.UpdateBookAsync(book);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch
                 {
-                    if (!BookExists(book.Id)) return NotFound();
-                    else throw;
+                    if (!await _bookService.BookExistsAsync(book.Id))
+                        return NotFound();
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -158,7 +101,7 @@ namespace ELibrary.Controllers
         {
             if (id == null) return NotFound();
 
-            var book = await _context.Books.FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _bookService.GetBookByIdAsync(id.Value);
             if (book == null) return NotFound();
 
             return View(book);
@@ -168,15 +111,8 @@ namespace ELibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            book.isDeleted = true;
-            await _context.SaveChangesAsync();
+            await _bookService.SoftDeleteBookAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool BookExists(int id)
-        {
-            return _context.Books.Any(e => e.Id == id);
         }
     }
 }

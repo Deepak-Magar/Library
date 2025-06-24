@@ -1,34 +1,28 @@
 ﻿using ELibrary.Models;
+using ELibrary.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ELibrary.Controllers
 {
     [Authorize]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-
     public class MemberController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IMemberService _memberService;
 
-        public MemberController(AppDbContext context)
+        public MemberController(IMemberService memberService)
         {
-            _context = context;
+            _memberService = memberService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var members = await _context.Members
-                .Where(m => !m.isDeleted)
-                .ToListAsync();
+            var members = await _memberService.GetAllMembersAsync();
             return View(members);
         }
 
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -36,8 +30,7 @@ namespace ELibrary.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(member);
-                await _context.SaveChangesAsync();
+                await _memberService.CreateMemberAsync(member);
                 return RedirectToAction(nameof(Index));
             }
             return View(member);
@@ -47,7 +40,7 @@ namespace ELibrary.Controllers
         {
             if (id == null) return NotFound();
 
-            var member = await _context.Members.FindAsync(id);
+            var member = await _memberService.GetMemberByIdAsync(id.Value);
             if (member == null) return NotFound();
 
             return View(member);
@@ -61,8 +54,7 @@ namespace ELibrary.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Update(member);
-                await _context.SaveChangesAsync();
+                await _memberService.UpdateMemberAsync(member);
                 return RedirectToAction(nameof(Index));
             }
             return View(member);
@@ -72,9 +64,7 @@ namespace ELibrary.Controllers
         {
             if (id == null) return NotFound();
 
-            var member = await _context.Members
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            var member = await _memberService.GetMemberByIdAsync(id.Value);
             if (member == null) return NotFound();
 
             return View(member);
@@ -84,12 +74,7 @@ namespace ELibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var member = await _context.Members.FindAsync(id);
-            if (member != null)
-            {
-                member.isDeleted = true;
-                await _context.SaveChangesAsync();
-            }
+            await _memberService.SoftDeleteMemberAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
@@ -97,9 +82,7 @@ namespace ELibrary.Controllers
         {
             if (id == null) return NotFound();
 
-            var member = await _context.Members
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            var member = await _memberService.GetMemberByIdAsync(id.Value);
             if (member == null) return NotFound();
 
             return View(member);

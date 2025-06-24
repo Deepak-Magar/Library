@@ -1,7 +1,5 @@
 ﻿using ELibrary.Models;
 using ELibrary.ViewModel;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +38,6 @@ namespace ELibrary.Controllers
                     return View(model);
                 }
             }
-
             return View(model);
         }
 
