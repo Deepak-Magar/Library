@@ -7,13 +7,14 @@
 
 <h2 class="mt-4">Books</h2>
 
-<form method="get" asp-action="Index" class="mb-3">
-    <div class="input-group">
-        <input type="text" id="searchBox" class="form-control" placeholder="Search books..." autocomplete="off" />
-    </div>
-</form>
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <a class="btn btn-success" asp-action="Create">Add New Book</a>
 
-<a class="btn btn-success mb-3" asp-action="Create">Add New Book</a>
+    <div style="max-width: 300px; width: 100%;">
+        <input type="text" id="searchBox" class="form-control form-control-sm" placeholder="Search books..." autocomplete="off" />
+    </div>
+</div>
+
 
 <table class="table table-striped">
     <thead class="table-dark">
@@ -53,7 +54,6 @@
         }
     </tbody>
 </table>
-<!-- Pagination -->
 <nav>
     <ul class="pagination">
         @if (ViewBag.CurrentPage > 1)
